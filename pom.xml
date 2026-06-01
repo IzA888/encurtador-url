@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.2</version>
+		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>encurtador-url</artifactId>
+	<artifactId>encurtadorUrl</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>encurtador-url</name>
+	<name>encurtadorUrl</name>
 	<description/>
 	<url/>
 	<licenses>
@@ -91,8 +91,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-				 	<!-- Remover a classe principal do Kafka -->
-					<mainClass>com.example.encurtadorurl.EncurtadorUrlApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

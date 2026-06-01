@@ -1,4 +1,4 @@
-package com.example.encurtador_url;
+package com.example.encurtadorUrl;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
