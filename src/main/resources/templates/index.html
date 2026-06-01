@@ -1,0 +1,69 @@
+<!-- Estrutura básica da página HTML -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- Meta tags para configuração da página -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encurtador de URL</title>
+    <!-- Link para folha de estilo CSS -->
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <!-- Cabeçalho da página -->
+    <header>
+        <h1>Encurtador de URL</h1>
+    </header>
+    <!-- Seção de conteúdo da página -->
+    <section>
+        <!-- Título da seção -->
+        <h2>Insira a URL para encurtar</h2>
+        <!-- Formulário para receber a URL -->
+        <form id="form-url">
+            <input type="text" id="url" placeholder="Insira a URL aqui">
+            <button type="submit">Encurtar</button>
+        </form>
+        <!-- Div para mostrar o resultado -->
+        <div id="resultado"></div>
+    </section>
+    <!-- Rodapé da página -->
+    <footer>
+        <p>&copy; 2026 Projeto</p>
+    </footer>
+    <!-- Script para funcionalidades JavaScript -->
+    <script>
+        // Seleciona o formulário e o campo de URL
+        const form = document.getElementById('form-url');
+        const urlInput = document.getElementById('url');
+        const resultadoDiv = document.getElementById('resultado');
+
+        // Adiciona evento de submit ao formulário
+        form.addEventListener('submit', (e) => {
+            // Previne o comportamento padrão do formulário
+            e.preventDefault();
+            // Pega o valor da URL
+            const url = urlInput.value;
+            // Verifica se a URL está vazio
+            if (url === '') {
+                resultadoDiv.innerHTML = 'Por favor, insira uma URL';
+            } else {
+                // Faz requisição para o servidor para encurtar a URL
+                fetch('/urls', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    resultadoDiv.innerHTML = `URL encurtada: <a href="${data.urlEncurtada}">${data.urlEncurtada}</a>`;
+                })
+                .catch((error) => {
+                    resultadoDiv.innerHTML = 'Erro ao encurtar a URL';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

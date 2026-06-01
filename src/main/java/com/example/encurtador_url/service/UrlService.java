@@ -23,10 +23,25 @@ public class UrlService implements IUrlService {
     private StringRedisTemplate redisTemplate;
 
     private final Long CACHE_TTL_DAYS = 7L;
+    private static final Integer MAX_RETRIES = 5;
 
     @Override
     public Url encurtarUrl(String originalUrl) {
+        Integer tentativa = 0;
+        while (tentativa < MAX_RETRIES) {
+            try {
+                return gerarUrlEncurtada(originalUrl);
+            } catch (RuntimeException e) {
+                tentativa++;
+                if (tentativa >= MAX_RETRIES) {
+                    throw new RuntimeException("Não foi possível gerar uma URL encurtada após " + MAX_RETRIES + " tentativas", e);
+                }
+            }
+        }
+        throw new RuntimeException("Erro inesperado ao encurtar a URL");
+    }
 
+    private Url gerarUrlEncurtada(String originalUrl) {
         String key = keyGen.genRandomKey();
         if(redisTemplate.hasKey(key) == Boolean.FALSE){ // Verifica se a chave já existe no Redis
             if(urlRepository.existsByHashUrl(key) == Boolean.FALSE){ // Verifica se a chave já existe no banco de dados
@@ -37,7 +52,7 @@ public class UrlService implements IUrlService {
                 urlRepository.save(url);
                 return url;
             } else {
-                return obterUrlPorHash(key);
+                throw new RuntimeException("Hash já existe no banco de dados" + key);
             }
         } else {
             throw new RuntimeException("Hash já existe no Redis" + key);
