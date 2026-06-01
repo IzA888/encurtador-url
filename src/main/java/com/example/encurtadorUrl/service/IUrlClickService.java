@@ -1,6 +1,6 @@
-package com.example.encurtador_url.service;
+package com.example.encurtadorUrl.service;
 
-import com.example.encurtador_url.entity.Url;
+import com.example.encurtadorUrl.entity.Url;
 
 import jakarta.servlet.http.HttpServletRequest;
 

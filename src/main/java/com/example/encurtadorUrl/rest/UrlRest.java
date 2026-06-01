@@ -1,4 +1,4 @@
-package com.example.encurtador_url.rest;
+package com.example.encurtadorUrl.rest;
 
 import java.net.URI;
 
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.encurtador_url.entity.Url;
-import com.example.encurtador_url.service.IUrlClickService;
-import com.example.encurtador_url.service.IUrlService;
+import com.example.encurtadorUrl.entity.Url;
+import com.example.encurtadorUrl.service.IUrlClickService;
+import com.example.encurtadorUrl.service.IUrlService;
 
 import jakarta.servlet.http.HttpServletRequest;
 

@@ -1,12 +1,12 @@
-package com.example.encurtador_url.service;
+package com.example.encurtadorUrl.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.encurtador_url.entity.Url;
-import com.example.encurtador_url.repository.UrlRepository;
-import com.example.encurtador_url.util.SecureKeyGenerator;
+import com.example.encurtadorUrl.entity.Url;
+import com.example.encurtadorUrl.repository.UrlRepository;
+import com.example.encurtadorUrl.util.SecureKeyGenerator;
 
 import jakarta.transaction.Transactional;
 

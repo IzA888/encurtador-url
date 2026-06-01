@@ -1,4 +1,4 @@
-package com.example.encurtador_url.service;
+package com.example.encurtadorUrl.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,9 +10,9 @@ import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.encurtador_url.entity.Url;
-import com.example.encurtador_url.entity.UrlClick;
-import com.example.encurtador_url.repository.UrlClickRepository;
+import com.example.encurtadorUrl.entity.Url;
+import com.example.encurtadorUrl.entity.UrlClick;
+import com.example.encurtadorUrl.repository.UrlClickRepository;
 
 import org.json.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;

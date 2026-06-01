@@ -1,9 +1,9 @@
-package com.example.encurtador_url.repository;
+package com.example.encurtadorUrl.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.encurtador_url.entity.UrlClick;
+import com.example.encurtadorUrl.entity.UrlClick;
 
 @Repository
 public interface UrlClickRepository extends JpaRepository<UrlClick, Long> {

@@ -1,4 +1,4 @@
-package com.example.encurtador_url.entity;
+package com.example.encurtadorUrl.entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;

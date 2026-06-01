@@ -1,11 +1,11 @@
-package com.example.encurtador_url.repository;
+package com.example.encurtadorUrl.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.encurtador_url.entity.Url;
+import com.example.encurtadorUrl.entity.Url;
 
 @Repository
 public interface UrlRepository extends JpaRepository<Url, Long> {

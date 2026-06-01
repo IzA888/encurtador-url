@@ -1,4 +1,4 @@
-package com.example.encurtador_url.util;
+package com.example.encurtadorUrl.util;
 
 import java.security.SecureRandom;
 
