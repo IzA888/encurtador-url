@@ -1,68 +1,100 @@
-<!-- Estrutura básica da página HTML -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Meta tags para configuração da página -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encurtador de URL</title>
-    <!-- Link para folha de estilo CSS -->
-    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/estilo.css}" href="/estilo.css">
 </head>
 <body>
-    <!-- Cabeçalho da página -->
+
     <header>
         <h1>Encurtador de URL</h1>
     </header>
-    <!-- Seção de conteúdo da página -->
+    
     <section>
-        <!-- Título da seção -->
-        <h2>Insira a URL para encurtar</h2>
-        <!-- Formulário para receber a URL -->
+        <h2>Insira a URL longa para encurtar</h2>
         <form id="form-url">
-            <input type="text" id="url" placeholder="Insira a URL aqui">
+            <input type="url" id="url" placeholder="https://exemplo.com/sua-url-longa" required>
             <button type="submit">Encurtar</button>
         </form>
-        <!-- Div para mostrar o resultado -->
+        
         <div id="resultado"></div>
     </section>
-    <!-- Rodapé da página -->
+    
     <footer>
-        <p>&copy; 2026 Projeto</p>
+        <p>&copy; 2026 Projeto Encurtador de URL</p>
     </footer>
-    <!-- Script para funcionalidades JavaScript -->
+    
     <script>
-        // Seleciona o formulário e o campo de URL
         const form = document.getElementById('form-url');
         const urlInput = document.getElementById('url');
         const resultadoDiv = document.getElementById('resultado');
 
-        // Adiciona evento de submit ao formulário
+        // Captura o domínio de onde a página está rodando (ex: http://localhost:8080)
+        const baseUrl = window.location.origin + "/urls";
+        
         form.addEventListener('submit', (e) => {
-            // Previne o comportamento padrão do formulário
             e.preventDefault();
-            // Pega o valor da URL
-            const url = urlInput.value;
-            // Verifica se a URL está vazio
-            if (url === '') {
-                resultadoDiv.innerHTML = 'Por favor, insira uma URL';
-            } else {
-                // Faz requisição para o servidor para encurtar a URL
-                fetch('/urls', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: url })
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    resultadoDiv.innerHTML = `URL encurtada: <a href="${data.urlEncurtada}">${data.urlEncurtada}</a>`;
-                })
-                .catch((error) => {
-                    resultadoDiv.innerHTML = 'Erro ao encurtar a URL';
-                });
-            }
+            const urlOriginal = urlInput.value.trim();
+
+            if (urlOriginal === '') return;
+            
+            // Exibe o estado de carregamento
+            resultadoDiv.style.display = 'block';
+            resultadoDiv.innerHTML = '<span style="color: #666;">Encurtando...</span>';
+            
+            // Faz o POST assíncrono para o Java
+            fetch(baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: urlOriginal
+            })
+            .then((response) => {
+                if (!response.ok) throw new Error('Erro do servidor');
+                return response.text();
+            })
+            .then((data) => {
+                const textoLimpo = data.trim();
+                
+                // Extrai o hash capturado pela String gerada no Spring ("URL encurtada: xxxxx")
+                const regex = /URL encurtada:\s*([a-zA-Z0-9_-]+)/i;
+                const match = textoLimpo.match(regex);
+                
+                let codigoHash = "";
+                if (match && match[1]) {
+                    codigoHash = match[1];
+                } else {
+                    codigoHash = textoLimpo; // Fallback caso venha o código cru
+                }
+
+                // Monta a estrutura se o hash for válido
+                if (codigoHash !== "" && !codigoHash.includes(" ")) {
+                    const urlEncurtadaCompleta = `${baseUrl}/${codigoHash}`;
+                    const urlLimpa = urlEncurtadaCompleta.replace(/["']/g, ""); // Limpa a URL para exibição
+
+                    resultadoDiv.innerHTML = `
+                        <p>🎉 <strong>Link encurtado!</strong></p>
+                        <p style="margin: 5px 0;"><a href="${urlLimpa}" target="_blank">${urlLimpa}</a></p>
+                        <button class="btn-acessar" id="btn-redirect">Acessar URL Encurtada</button>
+                    `;
+                    
+                    // Vincula o evento de clique para abrir o redirecionamento em nova aba
+                    document.getElementById('btn-redirect').onclick = () => {
+                        window.open(urlLimpa, '_blank');
+                    };
+                    
+                    urlInput.value = ''; // Reseta o input
+                } else {
+                    resultadoDiv.innerHTML = `<span style="color: red;">${textoLimpo}</span>`;
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                resultadoDiv.innerHTML = '<span style="color: red;">Erro ao comunicar com o servidor.</span>';
+            });
         });
     </script>
 </body>

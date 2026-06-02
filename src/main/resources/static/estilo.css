@@ -1,0 +1,125 @@
+/* Estilo para a página de encurtador de URL */
+
+/* Configurações gerais */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* Cabeçalho da página */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Seção de conteúdo da página */
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+}
+
+section h2 {
+    margin-bottom: 1em;
+}
+
+/* Formulário para receber a URL */
+#form-url {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#url {
+    padding: 0.5em;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 0.25em;
+    margin-bottom: 1em;
+}
+
+#form-url button[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 0.25em;
+    cursor: pointer;
+}
+
+#form-url button[type="submit"]:hover {
+    background-color: #444;
+}
+
+/* Div para mostrar o resultado */
+#resultado {
+    margin-top: 1em;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 0.25em;
+    background-color: #fff;
+}
+
+/* Rodapé da página */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    clear: both;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    section {
+        padding: 1em;
+    }
+    
+    #form-url {
+        width: 100%;
+    }
+    
+    #url {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 0.5em;
+    }
+    
+    section {
+        padding: 0.5em;
+    }
+    
+    #form-url {
+        flex-direction: column;
+    }
+    
+    #url {
+        margin-bottom: 0.5em;
+    }
+    
+    #form-url button[type="submit"] {
+        width: 100%;
+    }
+}
