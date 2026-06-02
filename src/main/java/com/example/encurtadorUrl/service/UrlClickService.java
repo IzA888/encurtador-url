@@ -20,11 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class UrlClickService {
+public class UrlClickService implements IUrlClickService {
 
     @Autowired
     private UrlClickRepository urlClickRepository;
 
+    @Override
     public void registrarClick(Url url, HttpServletRequest request) {
         try {
             UrlClick click = new UrlClick();
