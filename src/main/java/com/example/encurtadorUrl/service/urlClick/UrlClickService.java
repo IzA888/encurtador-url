@@ -1,4 +1,4 @@
-package com.example.encurtadorUrl.service;
+package com.example.encurtadorUrl.service.urlClick;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

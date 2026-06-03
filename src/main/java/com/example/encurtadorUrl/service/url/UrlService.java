@@ -1,4 +1,8 @@
-package com.example.encurtadorUrl.service;
+package com.example.encurtadorUrl.service.url;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,8 +26,9 @@ public class UrlService implements IUrlService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    private final Long CACHE_TTL_DAYS = 7L;
+    private final Long CACHE_TTL_DAYS = 7L; // Tempo de expiração do cache no Redis (7 dias)
     private static final Integer MAX_RETRIES = 5;
+    private static final String HOJE = LocalDate.now().toString();
 
     @Override
     public Url encurtarUrl(String originalUrl) {
@@ -45,7 +50,9 @@ public class UrlService implements IUrlService {
         String key = keyGen.genRandomKey();
         if(redisTemplate.hasKey(key) == Boolean.FALSE){ // Verifica se a chave já existe no Redis
             if(urlRepository.existsByHashUrl(key) == Boolean.FALSE){ // Verifica se a chave já existe no banco de dados
-                redisTemplate.opsForValue().set(key, originalUrl, CACHE_TTL_DAYS);
+                redisTemplate.opsForValue().set(key, originalUrl, Duration.ofDays(CACHE_TTL_DAYS));
+                redisTemplate.opsForSet().add(HOJE, key); // Adiciona a chave ao conjunto do dia de hoje
+                redisTemplate.expire(HOJE, Duration.ofDays(1)); // Define o tempo de expiração do conjunto do dia de hoje
                 Url url = new Url();
                 url.setHashUrl(key);
                 url.setOriginalUrl(originalUrl);
@@ -78,6 +85,20 @@ public class UrlService implements IUrlService {
     public void excluirUrl(String hashUrl) {
         redisTemplate.delete(hashUrl);
         urlRepository.deleteByHashUrl(hashUrl);
+    }
+
+    @Override
+    public List<Url> obterHistoricoUrlsDiaDeHoje() {
+        return redisTemplate.opsForSet().members(HOJE).stream() // urls do dia de hoje
+                .map(key -> {
+                    String originalUrl = redisTemplate.opsForValue().get(key);
+                    Url url = new Url();
+                    url.setHashUrl(key);
+                    url.setOriginalUrl(originalUrl);
+                    return url;
+                })
+                .filter(url -> url.getOriginalUrl() != null)
+                .toList();
     }
 
 }

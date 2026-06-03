@@ -20,20 +20,73 @@
         </form>
         
         <div id="resultado"></div>
+
+        <div id="container-historico" style="margin-top: 2rem; text-align: left;">
+            <h3 style="font-size: 1.1rem; color: #555; margin-bottom: 0.8rem; border-bottom: 2px solid #e9ecef; padding-bottom: 5px;">
+                Links Criados Hoje 🕒
+            </h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;" id="tabela-historico">
+                <thead>
+                    <tr style="background-color: #e9ecef; text-align: left;">
+                        <th style="padding: 8px; border: 1px solid #ddd;">Encurtada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
     </section>
+
     
     <footer>
-        <p>&copy; 2026 Projeto Encurtador de URL</p>
+        <p> 2026 Projeto Encurtador de URL</p>
     </footer>
     
     <script>
         const form = document.getElementById('form-url');
         const urlInput = document.getElementById('url');
         const resultadoDiv = document.getElementById('resultado');
+        const tabelaBody = document.querySelector('#tabela-historico tbody');
 
         // Captura o domínio de onde a página está rodando (ex: http://localhost:8080)
         const baseUrl = window.location.origin + "/urls";
+
+        // FLUXO 1: Função dinâmica que busca o histórico do Java e atualiza a tela
+        function atualizarHistorico() {
+            fetch(baseUrl + "/historico")
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao buscar histórico");
+                    return response.json();
+                })
+                .then(listaUrls => {
+                    // Limpa a tabela antes de redesenhar
+                    tabelaBody.innerHTML = "";
+
+                    if (listaUrls.length === 0) {
+                        tabelaBody.innerHTML = `<tr><td colspan="2" style="padding: 10px; text-align: center; color: #999;">Nenhum link gerado hoje.</td></tr>`;
+                        return;
+                    }
+
+                    // Faz um loop na lista recebida do Redis e cria as linhas da tabela
+                    listaUrls.forEach(item => {
+                        const linkCompleto = `${baseUrl}/${item.hashUrl}`;
+                        
+                        const linha = document.createElement('tr');
+                        linha.innerHTML = `
+                            <td style="padding: 8px; border: 1px solid #ddd; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <a href="${linkCompleto}" target="_blank" style="color: #007bff; font-weight: bold; text-decoration: none;">/${item.hashUrl}</a>
+                            </td>
+                        `;
+                        tabelaBody.appendChild(linha);
+                    });
+                })
+                .catch(err => console.error("Erro ao carregar histórico:", err));
+        }
+
+        // Executa a função automaticamente assim que a página terminar de carregar
+        document.addEventListener('DOMContentLoaded', atualizarHistorico);
         
+        // FLUXO 2: Envio do formulário (Encurtar)
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const urlOriginal = urlInput.value.trim();
@@ -86,6 +139,7 @@
                     };
                     
                     urlInput.value = ''; // Reseta o input
+                    atualizarHistorico(); // Atualiza o histórico após criar um novo link
                 } else {
                     resultadoDiv.innerHTML = `<span style="color: red;">${textoLimpo}</span>`;
                 }

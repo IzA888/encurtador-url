@@ -1,22 +1,18 @@
 package com.example.encurtadorUrl.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.encurtadorUrl.entity.Url;
-import com.example.encurtadorUrl.service.IUrlClickService;
-import com.example.encurtadorUrl.service.IUrlService;
+import com.example.encurtadorUrl.service.urlClick.IUrlClickService;
+import com.example.encurtadorUrl.service.url.IUrlService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -35,7 +31,6 @@ public class UrlController {
         return "index";
     }
 
-    // Endpoint para encurtar URL
     @PostMapping
     @ResponseBody // <--- ISSO diz ao Spring para retornar texto puro e não uma tela HTML
     public ResponseEntity<String> encurtarUrl(@RequestBody String url) {
@@ -46,7 +41,6 @@ public class UrlController {
         return ResponseEntity.ok("URL encurtada: " + hashUrl);  
     }
 
-    // Endpoint para acessar URL encurtada
     @GetMapping("/{codigo}")
     public ResponseEntity<Void> acessarUrl(@PathVariable String codigo, HttpServletRequest request) {
         // Redireciona para a URL original
@@ -59,7 +53,6 @@ public class UrlController {
                 .build();
     }
 
-    // Endpoint para deletar URL encurtada
     @PostMapping("/{codigo}")
     public String deletarUrl(@PathVariable String codigo, Model model) {
         // Deleta a URL encurtada do banco de dados
@@ -67,4 +60,11 @@ public class UrlController {
         model.addAttribute("mensagem", "URL excluída com sucesso");
         return "index";
     }
+
+    @GetMapping("/historico")
+    @ResponseBody
+    public ResponseEntity<List<Url>> obterHistoricoUrls() {
+        return ResponseEntity.ok(urlService.obterHistoricoUrlsDiaDeHoje());
+    }
+
 }
