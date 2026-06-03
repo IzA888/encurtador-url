@@ -1,6 +1,9 @@
 package com.example.encurtadorUrl.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.encurtadorUrl.entity.Url;
 import com.example.encurtadorUrl.service.IUrlClickService;
@@ -46,11 +48,15 @@ public class UrlController {
 
     // Endpoint para acessar URL encurtada
     @GetMapping("/{codigo}")
-    public RedirectView acessarUrl(@PathVariable String codigo, HttpServletRequest request) {
+    public ResponseEntity<Void> acessarUrl(@PathVariable String codigo, HttpServletRequest request) {
         // Redireciona para a URL original
         Url url = urlService.obterUrlPorHash(codigo);
+        // 2. Remove qualquer caractere invisível de controle (\p{Cntrl}) e espaços (\s)
+        String urlLimpa = url.getOriginalUrl().replaceAll("\\p{Cntrl}", "").replaceAll("\\s", "");
         urlClickService.registrarClick(url, request);
-        return new RedirectView(url.getOriginalUrl());
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(urlLimpa))
+                .build();
     }
 
     // Endpoint para deletar URL encurtada

@@ -73,17 +73,16 @@
                 // Monta a estrutura se o hash for válido
                 if (codigoHash !== "" && !codigoHash.includes(" ")) {
                     const urlEncurtadaCompleta = `${baseUrl}/${codigoHash}`;
-                    const urlLimpa = urlEncurtadaCompleta.replace(/["']/g, ""); // Limpa a URL para exibição
 
                     resultadoDiv.innerHTML = `
                         <p>🎉 <strong>Link encurtado!</strong></p>
-                        <p style="margin: 5px 0;"><a href="${urlLimpa}" target="_blank">${urlLimpa}</a></p>
+                        <p style="margin: 5px 0;"><a href="${urlEncurtadaCompleta}" target="_blank">${codigoHash}</a></p>
                         <button class="btn-acessar" id="btn-redirect">Acessar URL Encurtada</button>
                     `;
                     
                     // Vincula o evento de clique para abrir o redirecionamento em nova aba
                     document.getElementById('btn-redirect').onclick = () => {
-                        window.open(urlLimpa, '_blank');
+                        window.open(urlEncurtadaCompleta, '_blank');
                     };
                     
                     urlInput.value = ''; // Reseta o input
