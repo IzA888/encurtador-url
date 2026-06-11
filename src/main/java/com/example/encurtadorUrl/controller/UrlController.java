@@ -42,7 +42,7 @@ public class UrlController {
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<Void> acessarUrl(@PathVariable String codigo, HttpServletRequest request) {
+    public ResponseEntity<Void> acessarUrl(@PathVariable String codigo, HttpServletRequest request) throws Exception {
         // Redireciona para a URL original
         Url url = urlService.obterUrlPorHash(codigo);
         // 2. Remove qualquer caractere invisível de controle (\p{Cntrl}) e espaços (\s)

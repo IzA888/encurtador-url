@@ -68,7 +68,7 @@ public class UrlService implements IUrlService {
     }
 
     @Override
-    public Url obterUrlPorHash(String hashUrl) {
+    public Url obterUrlPorHash(String hashUrl) throws Exception {
         if (redisTemplate.hasKey(hashUrl)) {
             String originalUrl = redisTemplate.opsForValue().get(hashUrl);
             Url url = new Url();
@@ -76,7 +76,7 @@ public class UrlService implements IUrlService {
             url.setOriginalUrl(originalUrl);
             return url;
         } else {
-            return urlRepository.findByHashUrl(hashUrl).orElseThrow(() -> new RuntimeException("URL não encontrada: " + hashUrl));
+            return urlRepository.findByHashUrl(hashUrl).orElseThrow(() -> new Exception("URL não encontrada: " + hashUrl));
         }
     }
 

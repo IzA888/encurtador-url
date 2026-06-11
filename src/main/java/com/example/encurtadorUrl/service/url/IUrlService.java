@@ -13,7 +13,7 @@ public interface IUrlService {
      * Método para encurtar uma URL.
      * 
      * @param urlOriginal a URL original a ser encurtada
-     * @return a URL encurtada
+     * @return hash aleatório correspondente à URL
      */
     Url encurtarUrl(String urlOriginal);
 
@@ -21,9 +21,10 @@ public interface IUrlService {
      * Método para obter uma URL pelo seu hash.
      * 
      * @param hashUrl o hash da URL a ser obtida
-     * @return a URL obtida pelo hash
+     * @return a URL original correspondente ao hash fornecido
+      * @throws Exception se a URL não for encontrada ou ocorrer um erro durante a obtenção
      */
-    Url obterUrlPorHash(String hashUrl);
+    Url obterUrlPorHash(String hashUrl) throws Exception;
 
     /**
      * Método para excluir uma URL pelo seu hash.
@@ -35,7 +36,7 @@ public interface IUrlService {
     /**
      * Método para obter histórico de URLs encurtadas do dia de hoje.
      * 
-     * @return a lista de URLs encurtadas
+     * @return a lista de todas as URLs
      */
     List<Url> obterHistoricoUrlsDiaDeHoje();
 }
