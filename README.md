@@ -14,11 +14,11 @@ Este projeto é um serviço de encurtamento de URLs usando Spring Boot e Redis. 
 
 ## Conceitos importantes
 
-- Encurtamento: transformar uma URL longa em um caminho curto e único.
-- Persistência: armazenar dados em banco de dados para não perder informações.
-- Cache: usar Redis para armazenar resultados e melhorar desempenho.
-- Redirecionamento: enviar o usuário para a URL original ao acessar a versão curta.
-- Registro de cliques: acompanhar quem acessou a URL e algumas informações do visitante.
+- **Encurtamento**: transformar uma URL longa em um caminho curto e único.
+- **Persistência**: armazenar dados em banco de dados para não perder informações.
+- **Cache**: usar Redis para armazenar resultados e melhorar desempenho.
+- **Redirecionamento**: enviar o usuário para a URL original ao acessar a versão curta.
+- **Registro de cliques**: acompanhar quem acessou a URL e algumas informações do visitante.
 
 ## Fluxo de dados
 
@@ -60,6 +60,14 @@ graph TD
 - Tratamento de duplicidade: evita salvar a mesma URL mais de uma vez.
 - Fácil configuração via application.properties e empacotamento com Maven.
 
+## Testes
+
+- Testes unitários:
+  - `UrlServiceTest` garante a lógica de encurtamento, persistência e cache Redis.
+  - Verifica o comportamento em cenários de sucesso e falha ao buscar URLs.
+- Testes de integração:
+  - `UrlRestTest` valida o comportamento HTTP dos endpoints.
+  - Confirma a criação de URLs encurtadas e o redirecionamento para a URL original.
 
 ## Como executar
 
